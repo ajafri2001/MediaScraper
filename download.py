@@ -1,8 +1,8 @@
 import aiohttp
 import asyncio
-from tqdm import tqdm
 import os
 import mimetypes
+from tqdm import tqdm
 from urllib.parse import urlparse
 from aiofiles import open as aioopen
 from aiohttp import ClientSession, TCPConnector
@@ -11,8 +11,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-CONCURRENT_DOWNLOADS = int(os.getenv('CONCURRENT_DOWNLOADS', '10'))
-MAX_RETRIES = int(os.getenv('MAX_RETRIES', '3'))
+CONCURRENT_DOWNLOADS : int = int(os.getenv('CONCURRENT_DOWNLOADS', '10'))
+MAX_RETRIES : int = int(os.getenv('MAX_RETRIES', '3'))
 DOWNLOAD_DIR: str = os.getenv('DOWNLOAD_DIR', './downloads')
 
 
@@ -78,7 +78,7 @@ async def download_worker(queue, session, semaphore, pbar):  # Creating Worker T
 async def download_all(urls):
     queue = Queue()
     semaphore = Semaphore(CONCURRENT_DOWNLOADS)
-    connector = TCPConnector(limit=CONCURRENT_DOWNLOADS)
+    connector = TCPConnector(limit=CONCURRENT_DOWNLOADS) # Asyncio TCP connector
 
     async with ClientSession(connector=connector) as session:
         pbar = tqdm(total=len(urls), desc="Downloading")
@@ -88,7 +88,7 @@ async def download_all(urls):
         ]
 
         for i, url in enumerate(urls):
-            await queue.put((url, i))
+            await queue.put((url, i)) #Putting the URL and it's corresponding index
 
         await queue.join()
         pbar.close()

@@ -90,5 +90,5 @@ def crawler(start_url, max_depth):
 
 
 start_url = os.getenv("URL")
-max_depth: int = int(os.getenv("MAX_DEPTH", "0"))
+max_depth : int = int(os.getenv("MAX_DEPTH", "0"))
 crawler(start_url, max_depth)
