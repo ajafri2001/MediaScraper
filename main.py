@@ -5,8 +5,11 @@ import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse
 from urllib import robotparser
+from dotenv import load_dotenv
 
-def crawl_website(start_url, max_depth):
+load_dotenv()
+
+def crawler(start_url, max_depth):
     queue = deque([(start_url, 0)])  # (url, depth)
     visited = set([start_url])
     total_time = 0.0
@@ -46,9 +49,9 @@ def crawl_website(start_url, max_depth):
                 print(f"Robots.txt disallows crawling: {url}")
                 continue
 
-            try:
+            try: 
                 start_time = time.time()
-                response = session.get(url, headers=headers, timeout=10)
+                response = session.get(url, headers=headers, timeout=10) # 10 second session
                 response.raise_for_status()
                 end_time = time.time()
                 elapsed_time = end_time - start_time
@@ -62,7 +65,7 @@ def crawl_website(start_url, max_depth):
                     # Log the image URL to the file
                     url_file.write(f"{img_url}\n")
 
-                # Process links
+                # Traversing Logic
                 for a in soup.find_all("a", href=True):
                     link = urljoin(url, a["href"])
                     if link.startswith("http") and link not in visited:
@@ -82,6 +85,6 @@ def crawl_website(start_url, max_depth):
     print(f"Total time taken for crawling: {total_time:.2f} seconds")
     print(f"Total number of links found: {total_links}")
 
-start_url = "https://theplace-2.com"
-max_depth = 1
-crawl_website(start_url, max_depth)
+start_url  = os.getenv('URL')
+max_depth: int = int(os.getenv('MAX_DEPTH', '0'))
+crawler(start_url, max_depth)
