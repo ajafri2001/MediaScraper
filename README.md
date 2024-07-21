@@ -5,6 +5,6 @@ Install the dependencies by ```pip install -r requirements.txt```
 
 ```python main.py``` will generate a text file for downloads 
 
-```python download.py``` will download those files from the URL in the text file
+```python download.py``` will download those files from the URL's in the text file
 
 
