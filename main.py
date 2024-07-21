@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
 def crawler(start_url, max_depth):
     queue = deque([(start_url, 0)])  # (url, depth)
     visited = set([start_url])
@@ -25,10 +26,10 @@ def crawler(start_url, max_depth):
     robot_parsers = {}
 
     # Ensure the downloads directory exists
-    os.makedirs('./downloads', exist_ok=True)
+    os.makedirs("./downloads", exist_ok=True)
 
     # Open the file to log URLs
-    with open('./downloads/fetched-urls.txt', 'w') as url_file:
+    with open("./downloads/fetched-urls.txt", "w") as url_file:
         while queue:
             url, depth = queue.popleft()
             if depth > max_depth:
@@ -49,9 +50,11 @@ def crawler(start_url, max_depth):
                 print(f"Robots.txt disallows crawling: {url}")
                 continue
 
-            try: 
+            try:
                 start_time = time.time()
-                response = session.get(url, headers=headers, timeout=10) # 10 second session
+                response = session.get(
+                    url, headers=headers, timeout=10
+                )  # 10 second session
                 response.raise_for_status()
                 end_time = time.time()
                 elapsed_time = end_time - start_time
@@ -85,6 +88,7 @@ def crawler(start_url, max_depth):
     print(f"Total time taken for crawling: {total_time:.2f} seconds")
     print(f"Total number of links found: {total_links}")
 
-start_url  = os.getenv('URL')
-max_depth: int = int(os.getenv('MAX_DEPTH', '0'))
+
+start_url = os.getenv("URL")
+max_depth: int = int(os.getenv("MAX_DEPTH", "0"))
 crawler(start_url, max_depth)
